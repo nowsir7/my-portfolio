@@ -1,13 +1,18 @@
 import Link from "next/link";
 import React from "react";
 import Particles from "./components/particles";
+import { Redis } from "@upstash/redis";
+import { Eye } from "lucide-react";
+
+const redis = Redis.fromEnv();
 
 const navigation = [
-  // { name: "Projects", href: "/projects" },
+  { name: "Projects", href: "/projects" },
   { name: "Contact", href: "/contact" },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const viewCount = await redis.incr("ViewCountPortfolioPage");
   return (
     <div className="flex flex-col items-center justify-center w-screen h-screen overflow-hidden bg-gradient-to-tl from-black via-zinc-600/20 to-black">
       <nav className="my-16 animate-fade-in">
@@ -42,6 +47,7 @@ export default function Home() {
           problem-solving skills to deliver outstanding user experiences.
         </h2>
       </div>
+      <div className="flex items-center opacity-20"><Eye size={20} /><span className="mx-2">{viewCount}</span></div>
     </div>
   );
 }
